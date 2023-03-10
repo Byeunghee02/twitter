@@ -3,7 +3,7 @@ import { authService } from "../fBase";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 
-export default () => {
+const Profile = () => {
   const navigate = useNavigate();
   const onLogOutClick = () => {
     signOut(authService);
@@ -14,4 +14,6 @@ export default () => {
       <button onClick={onLogOutClick}>Log Out</button>
     </>
   );
-};
+}
+
+export default Profile;

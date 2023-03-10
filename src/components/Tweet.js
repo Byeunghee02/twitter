@@ -1,5 +1,6 @@
-import { dbService } from "fBase";
+import { dbService, storageService } from "fBase";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import React, { useState } from "react";
 
 const Tweet = ({ tweetObj, isOwner }) => {
@@ -10,12 +11,16 @@ const Tweet = ({ tweetObj, isOwner }) => {
 
     if (ok) {
       await deleteDoc(doc(dbService, "tweets", `${tweetObj.id}`));
+      if ((tweetObj.attachmentURL !== "")) 
+      await deleteObject(ref(storageService, tweetObj.attachmentURL));
     }
   };
   const toggleEditing = () => setEditing((prev) => !prev);
   const onSubmit = async (event) => {
     event.preventDefault();
-    await updateDoc(doc(dbService, "tweets", `${tweetObj.id}`),{text:newTweet});
+    await updateDoc(doc(dbService, "tweets", `${tweetObj.id}`), {
+      text: newTweet,
+    });
     setEditing(false);
   };
   const onChange = (event) => {
@@ -36,13 +41,16 @@ const Tweet = ({ tweetObj, isOwner }) => {
               onChange={onChange}
               required
             />
-            <input type="submit" value="Update Tweet"/>
+            <input type="submit" value="Update Tweet" />
           </form>
           <button onClick={toggleEditing}>Cancel</button>
         </>
       ) : (
         <>
           <h4>{tweetObj.text}</h4>
+          {tweetObj.attachmentURL && (
+            <img src={tweetObj.attachmentURL} alt="attachment" width="50px" height="50px" />
+          )}
           {isOwner && (
             <>
               <button onClick={onDeleteClick}>Delete Tweet</button>
