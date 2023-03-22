@@ -1,4 +1,4 @@
-import { dbService, storageService } from "fBase";
+import { dbService, storageService } from "../fBase";
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import React, { useEffect, useRef, useState } from "react";
@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 const Home = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
-  const [attachment, setAttachment] = useState('');
+  const [attachment, setAttachment] = useState("");
   const fileInput = useRef();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const Home = ({ userObj }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     let attachmentURL = "";
-    if ((attachment !== "")) {
+    if (attachment !== "") {
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(
         attachmentRef,
@@ -65,7 +65,7 @@ const Home = ({ userObj }) => {
     reader.readAsDataURL(theFile);
   };
   const onClearAttachment = () => {
-    setAttachment('');
+    setAttachment("");
     fileInput.current.value = null;
   };
   return (
